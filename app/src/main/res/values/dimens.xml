@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="element_top_margin">16dp</dimen>
+    <dimen name="edit_text_min_height">48dp</dimen>
+</resources>
