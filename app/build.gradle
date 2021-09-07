@@ -1,4 +1,7 @@
-apply plugin: 'com.android.application'
+plugins {
+    id 'com.android.application'
+    id "org.sonarqube" version "3.3"
+}
 
 android {
     compileSdkVersion 30
@@ -30,6 +33,14 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectKey", "NickGeramanis_message-in-a-bubble"
+        property "sonar.organization", "nickgeramanis"
+        property "sonar.host.url", "https://sonarcloud.io"
     }
 }
 
