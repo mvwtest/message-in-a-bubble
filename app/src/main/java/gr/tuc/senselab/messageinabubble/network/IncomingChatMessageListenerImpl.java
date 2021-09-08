@@ -20,11 +20,11 @@ public class IncomingChatMessageListenerImpl implements IncomingChatMessageListe
             double longitude = json.getDouble("longitude");
             String messageBody = json.getString("message");
             String sender = from.asEntityBareJidString().split("@")[0];
-            Bubble bubble = new Bubble(latitude, longitude, messageBody, sender, "");
+            Bubble bubble = new Bubble(latitude, longitude, messageBody, sender, null);
 
-            EventBus.getDefault().post(new NewMessageEvent(bubble, null));
+            EventBus.getDefault().postSticky(new NewMessageEvent(bubble, null));
         } catch (Exception e) {
-            EventBus.getDefault().post(new NewMessageEvent(null, e));
+            EventBus.getDefault().postSticky(new NewMessageEvent(null, e));
         }
     }
 }

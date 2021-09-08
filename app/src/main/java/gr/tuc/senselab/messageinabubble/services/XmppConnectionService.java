@@ -101,9 +101,9 @@ public class XmppConnectionService extends Service {
         threadHandler.post(() -> {
             try {
                 xmppConnection.sendMessage(bubble);
-                EventBus.getDefault().post(new NewMessageEvent(bubble, null));
+                EventBus.getDefault().postSticky(new NewMessageEvent(bubble, null));
             } catch (Exception e) {
-                EventBus.getDefault().post(new NewMessageEvent(bubble, e));
+                EventBus.getDefault().postSticky(new NewMessageEvent(bubble, e));
             }
         });
     }

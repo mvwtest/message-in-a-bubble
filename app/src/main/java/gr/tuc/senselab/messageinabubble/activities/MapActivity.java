@@ -170,13 +170,12 @@ public class MapActivity extends AppCompatActivity {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onNewMessageEvent(NewMessageEvent event) {
-        //FIXME: Event is not received
         Exception exception = event.getException();
         if (exception == null) {
             createBubble(event.getBubble());
@@ -186,14 +185,25 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void createBubble(Bubble bubble) {
-        Marker messageMarker = new Marker(mapView);
+        Marker marker = new Marker(mapView);
+
         Location location = new Location("");
         location.setLatitude(bubble.getLatitude());
         location.setLongitude(bubble.getLongitude());
-        messageMarker.setPosition(new GeoPoint(location));
-        messageMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        messageMarker.setTitle(bubble.getMessageBody());
-        mapView.getOverlays().add(messageMarker);
+
+        marker.setPosition(new GeoPoint(location));
+
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        String messageMarker = "";
+        if (bubble.getReceiver() == null) {
+            messageMarker += "From " + bubble.getSender() + ": ";
+        } else if (bubble.getSender() == null) {
+            messageMarker += "To " + bubble.getReceiver() + ": ";
+        }
+        marker.setTitle(messageMarker + bubble.getMessageBody());
+
+        mapView.getOverlays().add(marker);
     }
 
     private void buildAlertMessageNoGps() {

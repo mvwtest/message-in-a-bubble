@@ -95,7 +95,7 @@ public class MessageActivity extends AppCompatActivity {
             if (isServiceBound) {
                 double latitude = getIntent().getDoubleExtra("latitude", 0);
                 double longitude = getIntent().getDoubleExtra("longitude", 0);
-                Bubble bubble = new Bubble(latitude, longitude, messageBody, "", receiver);
+                Bubble bubble = new Bubble(latitude, longitude, messageBody, null, receiver);
                 xmppConnectionService.sendMessage(bubble);
             }
             finish();
