@@ -1,1 +1,0 @@
-docker run --name openfire -it -d --publish 9090:9090 --publish 5222:5222 openfire
