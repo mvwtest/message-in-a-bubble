@@ -9,7 +9,7 @@ public class Bubble {
 
     private final double latitude;
     private final double longitude;
-    private final String messageBody;
+    private final String body;
     private final String sender;
     private final String receiver;
 }

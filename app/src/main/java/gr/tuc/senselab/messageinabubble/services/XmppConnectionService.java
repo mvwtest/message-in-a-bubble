@@ -34,9 +34,7 @@ public class XmppConnectionService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getApplicationContext();
-
         startThread();
-
         return Service.START_STICKY;
     }
 
@@ -62,26 +60,24 @@ public class XmppConnectionService extends Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        isThreadActive = false;
         disconnect();
+        isThreadActive = false;
     }
 
-    public void connect(String jid, String password) {
+    public void connect(String username, String password) {
         threadHandler.post(() -> {
             try {
-                if (!xmppConnection.isConnected()) {
-                    xmppConnection.connect();
-                } else {
-                    if (xmppConnection.isAuthenticated()) {
-                        if (xmppConnection.getUsername().equals(jid)) {
-                            return;
-                        } else {
-                            xmppConnection.disconnect();
-                            xmppConnection.connect();
-                        }
+                if (xmppConnection.isAuthenticated()) {
+                    if (xmppConnection.getUsername().equals(username)) {
+                        return;
+                    } else {
+                        xmppConnection.disconnect();
                     }
                 }
-                xmppConnection.login(jid, password);
+                if (!xmppConnection.isConnected()) {
+                    xmppConnection.connect();
+                }
+                xmppConnection.login(username, password);
                 EventBus.getDefault().post(new LoginEvent(null));
             } catch (Exception e) {
                 EventBus.getDefault().post(new LoginEvent(e));
@@ -108,7 +104,7 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void createAccount(String jid, String password) {
+    public void createAccount(String username, String password) {
         threadHandler.post(() -> {
             try {
                 if (xmppConnection.isAuthenticated()) {
@@ -118,7 +114,7 @@ public class XmppConnectionService extends Service {
                     xmppConnection.connect();
                 }
                 xmppConnection.login();
-                xmppConnection.createAccount(jid, password);
+                xmppConnection.createAccount(username, password);
                 xmppConnection.disconnect();
                 EventBus.getDefault().post(new AccountCreationEvent(null));
             } catch (Exception e) {

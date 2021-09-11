@@ -27,12 +27,12 @@ import org.jxmpp.stringprep.XmppStringprepException;
 
 public class XmppConnection {
 
-    //private static final String HOST = "127.0.0.1";
+    // 127.0.0.1 for local openfire server, 10.0.2.2 running in android vm
     private static final String HOST = "10.0.2.2";
-    private static final String XMPP_DOMAIN_NAME = "e8d4730bfa5e";
+    private static final String XMPP_DOMAIN_NAME = "207459e2de01";
     private static final int PORT = 5222;
-    private static final String ADMIN_USERNAME = "admin";
-    private static final String ADMIN_PASSWORD = "admin";
+    private static final String ADMIN_USERNAME = "nick";
+    private static final String ADMIN_PASSWORD = "123";
 
     private final XMPPTCPConnection connection;
     private ChatManager chatManager;
@@ -40,9 +40,9 @@ public class XmppConnection {
 
     public XmppConnection(Context context) throws UnknownHostException, XmppStringprepException {
         AndroidSmackInitializer.initialize(context);
+
         InetAddress address = InetAddress.getByName(HOST);
         DomainBareJid domain = JidCreate.domainBareFrom(XMPP_DOMAIN_NAME);
-
         XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setXmppDomain(domain)
@@ -67,28 +67,26 @@ public class XmppConnection {
         connection.login(username, password);
 
         chatManager = ChatManager.getInstanceFor(connection);
-        IncomingChatMessageListenerImpl incomingChatMessageListenerImpl =
-                new IncomingChatMessageListenerImpl();
-        chatManager.addIncomingListener(incomingChatMessageListenerImpl);
+        chatManager.addIncomingListener(new IncomingChatMessageListenerImpl());
 
-        ReconnectionManager reconnectionManager = ReconnectionManager.getInstanceFor(connection);
-        reconnectionManager.enableAutomaticReconnection();
+        ReconnectionManager.getInstanceFor(connection).enableAutomaticReconnection();
     }
 
     public void sendMessage(Bubble bubble)
             throws XmppStringprepException, SmackException.NotConnectedException,
             InterruptedException, JSONException {
-        EntityBareJid receiver = JidCreate
-                .entityBareFrom(bubble.getReceiver() + "@" + XMPP_DOMAIN_NAME);
+        EntityBareJid receiver = JidCreate.entityBareFrom(
+                bubble.getReceiver() + "@" + XMPP_DOMAIN_NAME);
 
-        JSONObject msg = new JSONObject();
-        msg.put("latitude", bubble.getLatitude());
-        msg.put("longitude", bubble.getLongitude());
-        msg.put("message", bubble.getMessageBody());
+        JSONObject messageBody = new JSONObject();
+        messageBody.put("latitude", bubble.getLatitude());
+        messageBody.put("longitude", bubble.getLongitude());
+        messageBody.put("message", bubble.getBody());
+
         Message message = connection.getStanzaFactory()
                 .buildMessageStanza()
                 .to(receiver)
-                .setBody(msg.toString())
+                .setBody(messageBody.toString())
                 .build();
 
         Chat chat = chatManager.chatWith(receiver);

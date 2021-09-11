@@ -18,10 +18,10 @@
         android:text="@string/action_send"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/messageBody" />
+        app:layout_constraintTop_toBottomOf="@+id/message" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/messageBody"
+        android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/element_top_margin"

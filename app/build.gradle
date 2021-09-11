@@ -1,68 +1,70 @@
 plugins {
-    id 'com.android.application'
+    id "com.android.application"
     id "org.sonarqube" version "3.3"
+    id "jacoco"
+}
+
+sonarqube {
+    properties {
+        property "sonar.projectName", "Message in a Bubble"
+        property "sonar.projectVersion", "0.1.0"
+        property "sonar.projectKey", "NickGeramanis_message-in-a-bubble"
+        property "sonar.organization", "nickgeramanis"
+        property "sonar.host.url", "https://sonarcloud.io"
+        property "sonar.sources", "app/src/main"
+        property "sonar.tests", "app/src/test"
+        //property "sonar.coverage.jacoco.xmlReportPaths", "app/"
+    }
 }
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "30.0.3"
 
     defaultConfig {
         applicationId "gr.tuc.senselab.messageinabubble"
-        minSdkVersion 19
-        targetSdkVersion 30
+        minSdk 19
+        targetSdk 30
         versionCode 1
-        versionName "1.0"
+        versionName "0.1.0"
 
         multiDexEnabled true
-        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-    testOptions {
-        unitTests {
-            includeAndroidResources = true
-        }
-    }
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectKey", "NickGeramanis_message-in-a-bubble"
-        property "sonar.organization", "nickgeramanis"
-        property "sonar.host.url", "https://sonarcloud.io"
-    }
 }
 
 ext {
-    smackVersion = '4.4.3'
-    osmdroidVersion = '6.1.10'
-    eventBusVersion = '3.2.0'
-    lombokVersion = '1.18.20'
-    robolectricVersion = '4.5'
+    smackVersion = "4.4.3"
+    osmdroidVersion = "6.1.10"
+    eventBusVersion = "3.2.0"
+    lombokVersion = "1.18.20"
+    robolectricVersion = "4.5"
+    jacocoVersion = "0.8.1"
+    mockitoVersion = "3.12.4"
+    junitVersion = "4.13.2"
 }
 
 dependencies {
-    implementation 'androidx.appcompat:appcompat:1.3.1'
-    implementation 'com.google.android.material:material:1.4.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'androidx.annotation:annotation:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.1.0'
-    implementation "androidx.preference:preference:1.1.1"
-    testImplementation 'junit:junit:4.13.2'
+    implementation "androidx.appcompat:appcompat:1.3.1"
+    implementation "androidx.multidex:multidex:2.0.1"
+    implementation "androidx.constraintlayout:constraintlayout:2.1.0"
+    implementation "com.google.android.material:material:1.4.0"
+
+    testImplementation "junit:junit:$junitVersion"
     testImplementation "org.robolectric:robolectric:$robolectricVersion"
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "androidx.test:core:1.4.0"
+
     compileOnly "org.projectlombok:lombok:$lombokVersion"
     annotationProcessor "org.projectlombok:lombok:$lombokVersion"
 
@@ -77,7 +79,7 @@ dependencies {
 
 configurations {
     all {
-        exclude group: 'xpp3', module: 'xpp3'
+        exclude group: "xpp3", module: "xpp3"
     }
 }
 

@@ -4,8 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import android.content.Context;
-import gr.tuc.senselab.messageinabubble.activities.LoginActivity;
+import androidx.test.core.app.ApplicationProvider;
 import gr.tuc.senselab.messageinabubble.network.XmppConnection;
 import java.net.UnknownHostException;
 import java.util.Random;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.jxmpp.stringprep.XmppStringprepException;
-import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 
 @RunWith(RobolectricTestRunner.class)
@@ -32,10 +30,7 @@ public class TestXmppConnection {
 
     private XmppConnection createXmppConnection()
             throws XmppStringprepException, UnknownHostException {
-        LoginActivity loginActivity = Robolectric.buildActivity(LoginActivity.class).create()
-                .start().resume().get();
-        Context context = loginActivity.getApplicationContext();
-        return new XmppConnection(context);
+        return new XmppConnection(ApplicationProvider.getApplicationContext());
     }
 
     @Test

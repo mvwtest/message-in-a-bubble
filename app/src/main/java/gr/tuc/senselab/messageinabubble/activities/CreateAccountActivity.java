@@ -29,7 +29,6 @@ public class CreateAccountActivity extends AppCompatActivity {
     private XmppConnectionService xmppConnectionService;
     private boolean isServiceBound = false;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             XmppConnectionService.LocalBinder binder = (XmppConnectionService.LocalBinder) service;
@@ -47,9 +46,7 @@ public class CreateAccountActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_account);
-
         getUIElements();
-
         bindService(new Intent(this, XmppConnectionService.class), serviceConnection,
                 Context.BIND_AUTO_CREATE);
     }
@@ -88,11 +85,12 @@ public class CreateAccountActivity extends AppCompatActivity {
         usernameTextInputLayout.setError(null);
         passwordTextInputLayout.setError(null);
 
+        String username = Objects.requireNonNull(usernameTextInputLayout.getEditText()).getText()
+                .toString();
         String password = Objects.requireNonNull(passwordTextInputLayout.getEditText()).getText()
                 .toString();
-        String passwordVerification = Objects.
-                requireNonNull(passwordVerificationTextInputLayout.getEditText()).getText()
-                .toString();
+        String passwordVerification = Objects.requireNonNull(
+                passwordVerificationTextInputLayout.getEditText()).getText().toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -115,10 +113,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        String jid = Objects.requireNonNull(usernameTextInputLayout.getEditText()).getText()
-                .toString();
-
-        if (TextUtils.isEmpty(jid)) {
+        if (TextUtils.isEmpty(username)) {
             usernameTextInputLayout.setError(getString(R.string.error_field_required));
             focusView = usernameTextInputLayout;
             cancel = true;
@@ -128,7 +123,7 @@ public class CreateAccountActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             if (isServiceBound) {
-                xmppConnectionService.createAccount(jid, password);
+                xmppConnectionService.createAccount(username, password);
             }
         }
     }

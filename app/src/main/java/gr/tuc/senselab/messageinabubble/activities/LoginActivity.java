@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
     private XmppConnectionService xmppConnectionService;
     private boolean isServiceBound = false;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             XmppConnectionService.LocalBinder binder = (XmppConnectionService.LocalBinder) service;
@@ -58,27 +57,9 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
         requestPermissions();
         getUIElements();
         startXmppConnectionService();
-    }
-
-    private void startXmppConnectionService() {
-        startService(new Intent(this, XmppConnectionService.class));
-        bindService(new Intent(this, XmppConnectionService.class), serviceConnection,
-                Context.BIND_AUTO_CREATE);
-    }
-
-    private void getUIElements() {
-        Button loginButton = findViewById(R.id.login);
-        loginButton.setOnClickListener(this::onLogInButtonClick);
-
-        Button createAccountButton = findViewById(R.id.create_account);
-        createAccountButton.setOnClickListener(this::onCreateAccountButtonClick);
-
-        usernameTextInputLayout = findViewById(R.id.username);
-        passwordTextInputLayout = findViewById(R.id.password);
     }
 
     private void requestPermissions() {
@@ -95,6 +76,23 @@ public class LoginActivity extends AppCompatActivity {
             permissions = permissionsToRequest.toArray(permissions);
             ActivityCompat.requestPermissions(this, permissions, REQUEST_RESPONSE_CODE);
         }
+    }
+
+    private void getUIElements() {
+        Button loginButton = findViewById(R.id.login);
+        loginButton.setOnClickListener(this::onLogInButtonClick);
+
+        Button createAccountButton = findViewById(R.id.create_account);
+        createAccountButton.setOnClickListener(this::onCreateAccountButtonClick);
+
+        usernameTextInputLayout = findViewById(R.id.username);
+        passwordTextInputLayout = findViewById(R.id.password);
+    }
+
+    private void startXmppConnectionService() {
+        startService(new Intent(this, XmppConnectionService.class));
+        bindService(new Intent(this, XmppConnectionService.class), serviceConnection,
+                Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -122,10 +120,9 @@ public class LoginActivity extends AppCompatActivity {
         usernameTextInputLayout.setError(null);
         passwordTextInputLayout.setError(null);
 
-        String jid = Objects.requireNonNull(usernameTextInputLayout.getEditText()).getText()
+        String username = Objects.requireNonNull(usernameTextInputLayout.getEditText()).getText()
                 .toString();
-        String password = Objects.requireNonNull(passwordTextInputLayout.getEditText())
-                .getText()
+        String password = Objects.requireNonNull(passwordTextInputLayout.getEditText()).getText()
                 .toString();
 
         boolean cancel = false;
@@ -137,7 +134,7 @@ public class LoginActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(jid)) {
+        if (TextUtils.isEmpty(username)) {
             usernameTextInputLayout.setError(getString(R.string.error_field_required));
             focusView = usernameTextInputLayout;
             cancel = true;
@@ -147,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
             focusView.requestFocus();
         } else {
             if (isServiceBound) {
-                xmppConnectionService.connect(jid, password);
+                xmppConnectionService.connect(username, password);
             }
         }
     }

@@ -49,7 +49,6 @@ public class MapActivity extends AppCompatActivity {
     private XmppConnectionService xmppConnectionService;
     private boolean isServiceBound = false;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             XmppConnectionService.LocalBinder binder = (XmppConnectionService.LocalBinder) service;
@@ -67,9 +66,7 @@ public class MapActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-
         initializeMapView();
-
         Intent intent = new Intent(this, XmppConnectionService.class);
         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
@@ -79,7 +76,6 @@ public class MapActivity extends AppCompatActivity {
 
         mapView = findViewById(R.id.map_view);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
-
         mapView.setMultiTouchControls(true);
         mapView.setClickable(true);
         mapView.setUseDataConnection(true);
@@ -93,16 +89,12 @@ public class MapActivity extends AppCompatActivity {
 
         IMapController mapController = mapView.getController();
         mapController.setZoom(ZOOM_LEVEL);
-        GeoPoint startPoint = new GeoPoint(STARTING_LATITUDE, STARTING_LONGITUDE);
-        mapController.setCenter(startPoint);
+        mapController.setCenter(new GeoPoint(STARTING_LATITUDE, STARTING_LONGITUDE));
+
+        mapView.getOverlays().add(new MapEventsOverlay(new MapEventsReceiverImpl(this)));
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-
         locationListener = new LocationListenerImpl(locationOverlay);
-
-        MapEventsReceiverImpl mapEventsReceiverImpl = new MapEventsReceiverImpl(this);
-        MapEventsOverlay overlayEvents = new MapEventsOverlay(mapEventsReceiverImpl);
-        mapView.getOverlays().add(overlayEvents);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -190,18 +182,18 @@ public class MapActivity extends AppCompatActivity {
         Location location = new Location("");
         location.setLatitude(bubble.getLatitude());
         location.setLongitude(bubble.getLongitude());
-
         marker.setPosition(new GeoPoint(location));
 
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        String messageMarker = "";
+        String bubbleBody = "";
         if (bubble.getReceiver() == null) {
-            messageMarker += "From " + bubble.getSender() + ": ";
+            bubbleBody += "From " + bubble.getSender() + ": ";
         } else if (bubble.getSender() == null) {
-            messageMarker += "To " + bubble.getReceiver() + ": ";
+            bubbleBody += "To " + bubble.getReceiver() + ": ";
         }
-        marker.setTitle(messageMarker + bubble.getMessageBody());
+        bubbleBody += bubble.getBody();
+        marker.setTitle(bubbleBody);
 
         mapView.getOverlays().add(marker);
     }

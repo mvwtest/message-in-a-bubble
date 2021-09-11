@@ -19,12 +19,11 @@ import java.util.Objects;
 public class MessageActivity extends AppCompatActivity {
 
     private TextInputLayout receiverTextInputLayout;
-    private TextInputLayout messageBodyTextInputLayout;
+    private TextInputLayout messageTextInputLayout;
 
     private XmppConnectionService xmppConnectionService;
     private boolean isServiceBound = false;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-
         @Override
         public void onServiceConnected(ComponentName className, IBinder service) {
             XmppConnectionService.LocalBinder binder = (XmppConnectionService.LocalBinder) service;
@@ -42,9 +41,7 @@ public class MessageActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message);
-
         getUIElements();
-
         bindService(new Intent(this, XmppConnectionService.class), serviceConnection,
                 Context.BIND_AUTO_CREATE);
     }
@@ -54,7 +51,7 @@ public class MessageActivity extends AppCompatActivity {
         sendButton.setOnClickListener(this::onSendButtonClick);
 
         receiverTextInputLayout = findViewById(R.id.receiver);
-        messageBodyTextInputLayout = findViewById(R.id.messageBody);
+        messageTextInputLayout = findViewById(R.id.message);
     }
 
     @Override
@@ -67,12 +64,12 @@ public class MessageActivity extends AppCompatActivity {
 
     public void onSendButtonClick(View view) {
         receiverTextInputLayout.setError(null);
-        messageBodyTextInputLayout.setError(null);
+        messageTextInputLayout.setError(null);
 
         String receiver = Objects.requireNonNull(receiverTextInputLayout.getEditText()).getText()
                 .toString();
-        String messageBody = Objects.requireNonNull(messageBodyTextInputLayout.getEditText())
-                .getText().toString();
+        String bubbleBody = Objects.requireNonNull(messageTextInputLayout.getEditText()).getText()
+                .toString();
 
         boolean cancel = false;
         View focusView = null;
@@ -83,9 +80,9 @@ public class MessageActivity extends AppCompatActivity {
             cancel = true;
         }
 
-        if (TextUtils.isEmpty(messageBody)) {
-            messageBodyTextInputLayout.setError(getString(R.string.error_field_required));
-            focusView = messageBodyTextInputLayout;
+        if (TextUtils.isEmpty(bubbleBody)) {
+            messageTextInputLayout.setError(getString(R.string.error_field_required));
+            focusView = messageTextInputLayout;
             cancel = true;
         }
 
@@ -95,7 +92,7 @@ public class MessageActivity extends AppCompatActivity {
             if (isServiceBound) {
                 double latitude = getIntent().getDoubleExtra("latitude", 0);
                 double longitude = getIntent().getDoubleExtra("longitude", 0);
-                Bubble bubble = new Bubble(latitude, longitude, messageBody, null, receiver);
+                Bubble bubble = new Bubble(latitude, longitude, bubbleBody, null, receiver);
                 xmppConnectionService.sendMessage(bubble);
             }
             finish();

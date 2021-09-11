@@ -13,14 +13,14 @@ public class IncomingChatMessageListenerImpl implements IncomingChatMessageListe
 
     @Override
     public void newIncomingMessage(EntityBareJid from, Message message, Chat chat) {
-        String body = message.getBody();
+        String messageBody = message.getBody();
         try {
-            JSONObject json = new JSONObject(body);
+            JSONObject json = new JSONObject(messageBody);
             double latitude = json.getDouble("latitude");
             double longitude = json.getDouble("longitude");
-            String messageBody = json.getString("message");
+            String bubbleBody = json.getString("message");
             String sender = from.asEntityBareJidString().split("@")[0];
-            Bubble bubble = new Bubble(latitude, longitude, messageBody, sender, null);
+            Bubble bubble = new Bubble(latitude, longitude, bubbleBody, sender, null);
 
             EventBus.getDefault().postSticky(new NewMessageEvent(bubble, null));
         } catch (Exception e) {
