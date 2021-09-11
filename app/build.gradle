@@ -11,8 +11,8 @@ sonarqube {
         property "sonar.projectKey", "NickGeramanis_message-in-a-bubble"
         property "sonar.organization", "nickgeramanis"
         property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.sources", "app/src/main"
-        property "sonar.tests", "app/src/test"
+        property "sonar.sources", "src/main"
+        property "sonar.tests", "src/test"
         //property "sonar.coverage.jacoco.xmlReportPaths", "app/"
     }
 }
