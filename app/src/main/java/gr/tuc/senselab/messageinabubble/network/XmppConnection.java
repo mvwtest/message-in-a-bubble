@@ -27,12 +27,12 @@ import org.jxmpp.stringprep.XmppStringprepException;
 
 public class XmppConnection {
 
-    // 127.0.0.1 for local openfire server, 10.0.2.2 running in android vm
+    // 127.0.0.1 for local openfire server, 10.0.2.2 for running in android vm
     private static final String HOST = "10.0.2.2";
-    private static final String XMPP_DOMAIN_NAME = "207459e2de01";
+    private static final String XMPP_DOMAIN_NAME = "fcb7e0322a3c";
     private static final int PORT = 5222;
-    private static final String ADMIN_USERNAME = "nick";
-    private static final String ADMIN_PASSWORD = "123";
+    private static final String ADMIN_USERNAME = "admin";
+    private static final String ADMIN_PASSWORD = "admin";
 
     private final XMPPTCPConnection connection;
     private ChatManager chatManager;
