@@ -32,8 +32,6 @@ folder.
 
 ### Installation
 
-#### Application
-
 You can use Android Studio to install/debug/modify the application.
 
 Alternatively, you build the apk by running the following command:
@@ -46,8 +44,6 @@ cd message-in-a-bubble
 The apk will be located in the `message-in-a-bubble/app/build/outputs/apk` folder.
 
 Make sure `XmppConnection.java` has the necessary information to connect to your server.
-
-#### Server
 
 You can use whichever XMPP server you like. However, in folder `openfire`, you can find the required
 files to setup a dockerized Openfire server with an external MySQL database. You will need to have
@@ -75,13 +71,16 @@ of [Openfire](https://download.igniterealtime.org/openfire/docs/latest/documenta
 
 ## Usage
 
-A simple demonstration of the application is presented below:
+The first time you start the application you need to grant the application permission to use your
+location and write access. Then you can login using your credentials or create a new account.
 
 ![Login](/images/login.png)
 
 ![Create Account](/images/create_account.png)
 
 ![Main](/images/main.png)
+
+Once you have logged in you can send a message by long-tapping on your desired location on the map.
 
 ![Send Message](/images/send_message.png)
 
