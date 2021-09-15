@@ -34,8 +34,7 @@ folder.
 
 #### Application
 
-You can use Android Studio to install/debug/modify the application. Make sure `XmppConnection.java`
-has the necessary information to connect to your server.
+You can use Android Studio to install/debug/modify the application.
 
 Alternatively, you build the apk by running the following command:
 
@@ -46,10 +45,12 @@ cd message-in-a-bubble
 
 The apk will be located in the `message-in-a-bubble/app/build/outputs/apk` folder.
 
+Make sure `XmppConnection.java` has the necessary information to connect to your server.
+
 #### Server
 
 You can use whichever XMPP server you like. However, in folder `openfire`, you can find the required
-files to set up a dockerized Openfire server with an external MySQL database. You will need to have
+files to setup a dockerized Openfire server with an external MySQL database. You will need to have
 installed both [Docker](https://www.docker.com/)
 and [Docker Compose](https://docs.docker.com/compose/). Navigate to the `openfire` folder and start
 up the server by running the `docker-compose.yml` file with Docker Compose.
@@ -62,7 +63,7 @@ docker-compose up -d
 This will create two containers:
 
 `mysql`: This is the Database Management System (DBMS) which the Openfire server will use to store
-information. The Openfire's database (openfiredb) will be created automatically during setup with
+information. The Openfire's database (`openfiredb`) will be created automatically during setup with
 all the required tables. You can access the database using `admin`, `admin` as username and password
 respectively.
 
