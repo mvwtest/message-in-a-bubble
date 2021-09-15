@@ -23,21 +23,103 @@
     <h3 id="description">Description</h3>
     <p>
         In Message in a Bubble the users do not simply communicate with plain text messages but
-        instead are using bubbles which apart from the message itself are referring to a set of
-        coordinates in the world map. The instant messaging protocol that "Message in a Bubble"
+        instead are using bubbles which apart from containing the message are also referring to a
+        set of coordinates in the world map. The instant messaging protocol that Message in a Bubble
         uses is the
-        <a href="https://xmpp.org/">Extensible Messaging and Presence Protocol (XMPP)</a>.
-        The backend of the application is an
+        <a href="https://xmpp.org/">Extensible Messaging and Presence Protocol (XMPP)</a>
+        with
+        <a href="https://github.com/igniterealtime/Smack">Smack</a>
+        as a client library. As for backend, you can use any XMPP server but an
         <a href="https://www.igniterealtime.org/projects/openfire/">Openfire</a>
-        server and it is provided as a docker container connected to an external MySQL Database.
+        server is provided as a docker container connected to an external MySQL Database.
     </p>
     <h3 id="gettingStarted">Getting Started</h3>
     <h4>Prerequisites</h4>
-    <p></p>
+    <p>
+        All the dependencies of the application are listed in the
+        <quote>build.gradle</quote>
+        file inside the
+        <quote>app</quote>
+        folder.
+    </p>
     <h4>Installation</h4>
-    <p></p>
+    <p>You can use Android Studio to install/debug/modify the application.</p>
+    <p>Alternatively, you build the apk by running the following command:</p>
+    <code>
+        cd message-in-a-bubble <br>
+        ./gradlew build
+    </code>
+    <p>
+        The apk will be located in the
+        <quote>message-in-a-bubble/app/build/outputs/apk</quote>
+        folder.
+    </p>
+    <p>
+        Make sure
+        <quote>XmppConnection.java</quote>
+        has the necessary information to connect to your server.
+    </p>
+    <p>
+        You can use whichever XMPP server you like. However, in folder
+        <quote>openfire</quote>
+        , you can find the required files to setup a dockerized Openfire server with an external
+        MySQL database. You will need to have installed both
+        <a href="https://www.docker.com/">Docker</a>
+        and
+        <a href="https://docs.docker.com/compose/">Docker Compose</a>
+        . Navigate to the
+        <quote>openfire</quote>
+        folder and start up the server by running the
+        <quote>docker-compose.yml</quote>
+        file with Docker Compose.
+    </p>
+    <code>
+        cd openfire <br>
+        docker-compose up -d
+    </code>
+    <p>This will create two containers:</p>
+    <ul>
+        <li>
+            <quote>mysql</quote>
+            : This is the Database Management System (DBMS) which the Openfire server will
+            use to store information. The Openfire's database (
+            <quote>openfiredb</quote>
+            ) will be created automatically during setup with all the required tables. You can
+            access the database using
+            <quote>admin</quote>
+            ,
+            <quote>admin</quote>
+            as username and password respectively.
+        </li>
+        <li>
+            <quote>openfire</quote>
+            : This is the Openfire server that the android application will communicate with.
+            Initial setup and administration can be done by navigating to the address
+            <quote>http://localhost:9090</quote>
+            . Make sure to connect the server to the external database by using
+            <quote>database</quote>
+            and
+            <quote>openfiredb</quote>
+            as HOSTNAME and DATABASENAME respectively. For more information see the documentation on
+            the official site
+            of <a href="https://download.igniterealtime.org/openfire/docs/latest/documentation/">Openfire</a>.
+        </li>
+    </ul>
     <h3 id="usage">Usage</h3>
-    <p></p>
+    <p>
+        The first time you start the application you need to grant the application permission to use
+        your location and write access. Then you can login using your credentials or create a new
+        account.
+    </p>
+    <img alt="Login" src="images/login.png">
+    <img alt="Create Account" src="images/create_account.png">
+    <img alt="Main" src="images/main.png">
+    <p>
+        Once you have logged in you can send a message by long-tapping on your desired location on
+        the map.
+    </p>
+    <img alt="Send Message" src="images/send_message.png">
+    <img alt="Main2" src="images/main2.png">
     <h3 id="about">About</h3>
     <h4>Status</h4>
     <p>Under development.</p>
