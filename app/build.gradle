@@ -1,20 +1,6 @@
 plugins {
     id "com.android.application"
-    id "org.sonarqube" version "3.3"
     id "jacoco"
-}
-
-sonarqube {
-    properties {
-        property "sonar.projectName", "Message in a Bubble"
-        property "sonar.projectVersion", "0.1.0"
-        property "sonar.projectKey", "NickGeramanis_message-in-a-bubble"
-        property "sonar.organization", "nickgeramanis"
-        property "sonar.host.url", "https://sonarcloud.io"
-        property "sonar.sources", "src/main"
-        property "sonar.tests", "src/test"
-        //property "sonar.coverage.jacoco.xmlReportPaths", "app/"
-    }
 }
 
 android {

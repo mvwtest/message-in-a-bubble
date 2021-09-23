@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class LoginEvent {
+public class LoginFailedEvent {
 
     private final Exception exception;
 

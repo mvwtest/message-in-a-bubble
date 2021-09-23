@@ -29,7 +29,7 @@ public class XmppConnection {
 
     // 127.0.0.1 for local openfire server, 10.0.2.2 for running in android vm
     private static final String HOST = "10.0.2.2";
-    private static final String XMPP_DOMAIN_NAME = "fcb7e0322a3c";
+    private static final String XMPP_DOMAIN_NAME = "fae72788ab30";
     private static final int PORT = 5222;
     private static final String ADMIN_USERNAME = "admin";
     private static final String ADMIN_PASSWORD = "admin";
@@ -72,11 +72,10 @@ public class XmppConnection {
         ReconnectionManager.getInstanceFor(connection).enableAutomaticReconnection();
     }
 
-    public void sendMessage(Bubble bubble)
+    public void sendMessage(Bubble bubble, String receiver)
             throws XmppStringprepException, SmackException.NotConnectedException,
             InterruptedException, JSONException {
-        EntityBareJid receiver = JidCreate.entityBareFrom(
-                bubble.getReceiver() + "@" + XMPP_DOMAIN_NAME);
+        EntityBareJid to = JidCreate.entityBareFrom(receiver + "@" + XMPP_DOMAIN_NAME);
 
         JSONObject messageBody = new JSONObject();
         messageBody.put("latitude", bubble.getLatitude());
@@ -85,11 +84,11 @@ public class XmppConnection {
 
         Message message = connection.getStanzaFactory()
                 .buildMessageStanza()
-                .to(receiver)
+                .to(to)
                 .setBody(messageBody.toString())
                 .build();
 
-        Chat chat = chatManager.chatWith(receiver);
+        Chat chat = chatManager.chatWith(to);
         chat.send(message);
     }
 

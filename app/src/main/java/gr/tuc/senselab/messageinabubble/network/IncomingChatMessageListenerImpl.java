@@ -1,7 +1,8 @@
 package gr.tuc.senselab.messageinabubble.network;
 
 import gr.tuc.senselab.messageinabubble.utils.Bubble;
-import gr.tuc.senselab.messageinabubble.utils.events.NewMessageEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingSuccessfulEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
@@ -20,11 +21,11 @@ public class IncomingChatMessageListenerImpl implements IncomingChatMessageListe
             double longitude = json.getDouble("longitude");
             String bubbleBody = json.getString("message");
             String sender = from.asEntityBareJidString().split("@")[0];
-            Bubble bubble = new Bubble(latitude, longitude, bubbleBody, sender, null);
+            Bubble bubble = new Bubble(latitude, longitude, bubbleBody);
 
-            EventBus.getDefault().postSticky(new NewMessageEvent(bubble, null));
+            EventBus.getDefault().postSticky(new MessageReceivingSuccessfulEvent(bubble, sender));
         } catch (Exception e) {
-            EventBus.getDefault().postSticky(new NewMessageEvent(null, e));
+            EventBus.getDefault().postSticky(new MessageReceivingFailedEvent(e));
         }
     }
 }

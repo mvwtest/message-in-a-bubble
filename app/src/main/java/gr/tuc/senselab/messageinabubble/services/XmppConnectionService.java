@@ -9,9 +9,12 @@ import android.os.IBinder;
 import android.os.Looper;
 import gr.tuc.senselab.messageinabubble.network.XmppConnection;
 import gr.tuc.senselab.messageinabubble.utils.Bubble;
-import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationEvent;
-import gr.tuc.senselab.messageinabubble.utils.events.LoginEvent;
-import gr.tuc.senselab.messageinabubble.utils.events.NewMessageEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationSuccessfulEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.LoginFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.LoginSuccessfulEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageSendingFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageSendingSuccessfulEvent;
 import org.greenrobot.eventbus.EventBus;
 
 public class XmppConnectionService extends Service {
@@ -78,9 +81,9 @@ public class XmppConnectionService extends Service {
                     xmppConnection.connect();
                 }
                 xmppConnection.login(username, password);
-                EventBus.getDefault().post(new LoginEvent(null));
+                EventBus.getDefault().post(new LoginSuccessfulEvent());
             } catch (Exception e) {
-                EventBus.getDefault().post(new LoginEvent(e));
+                EventBus.getDefault().post(new LoginFailedEvent(e));
             }
         });
     }
@@ -93,13 +96,13 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void sendMessage(Bubble bubble) {
+    public void sendMessage(Bubble bubble, String receiver) {
         threadHandler.post(() -> {
             try {
-                xmppConnection.sendMessage(bubble);
-                EventBus.getDefault().postSticky(new NewMessageEvent(bubble, null));
+                xmppConnection.sendMessage(bubble, receiver);
+                EventBus.getDefault().postSticky(new MessageSendingSuccessfulEvent(bubble, receiver));
             } catch (Exception e) {
-                EventBus.getDefault().postSticky(new NewMessageEvent(bubble, e));
+                EventBus.getDefault().postSticky(new MessageSendingFailedEvent(e));
             }
         });
     }
@@ -116,9 +119,9 @@ public class XmppConnectionService extends Service {
                 xmppConnection.login();
                 xmppConnection.createAccount(username, password);
                 xmppConnection.disconnect();
-                EventBus.getDefault().post(new AccountCreationEvent(null));
+                EventBus.getDefault().post(new AccountCreationSuccessfulEvent());
             } catch (Exception e) {
-                EventBus.getDefault().post(new AccountCreationEvent(e));
+                EventBus.getDefault().post(new AccountCreationFailedEvent(e));
             }
         });
     }

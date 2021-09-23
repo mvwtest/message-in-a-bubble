@@ -14,7 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import gr.tuc.senselab.messageinabubble.R;
 import gr.tuc.senselab.messageinabubble.services.XmppConnectionService;
-import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationSuccessfulEvent;
 import java.util.Objects;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -129,14 +130,14 @@ public class CreateAccountActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onAccountCreationEvent(AccountCreationEvent event) {
-        Exception exception = event.getException();
-        if (exception == null) {
-            Toast.makeText(this, "Account successfully created", Toast.LENGTH_LONG).show();
-            finish();
-        } else {
-            Toast.makeText(this, "Error while trying to create account", Toast.LENGTH_LONG).show();
-            exception.printStackTrace();
-        }
+    public void onAccountCreationEvent(AccountCreationSuccessfulEvent event) {
+        Toast.makeText(this, "Account successfully created", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onAccountCreationFailedEvent(AccountCreationFailedEvent event) {
+        Toast.makeText(this, "Error while trying to create account", Toast.LENGTH_LONG).show();
+        event.getException().printStackTrace();
     }
 }

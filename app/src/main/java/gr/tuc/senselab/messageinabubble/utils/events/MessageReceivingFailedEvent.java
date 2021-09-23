@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class AccountCreationEvent {
+public class MessageReceivingFailedEvent {
 
     private final Exception exception;
 

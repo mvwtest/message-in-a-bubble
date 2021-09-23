@@ -20,7 +20,8 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.textfield.TextInputLayout;
 import gr.tuc.senselab.messageinabubble.R;
 import gr.tuc.senselab.messageinabubble.services.XmppConnectionService;
-import gr.tuc.senselab.messageinabubble.utils.events.LoginEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.LoginFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.LoginSuccessfulEvent;
 import java.util.ArrayList;
 import java.util.Objects;
 import org.greenrobot.eventbus.EventBus;
@@ -154,14 +155,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onLoginEvent(LoginEvent event) {
-        Exception exception = event.getException();
-        if (exception == null) {
-            Toast.makeText(LoginActivity.this, "Connection Successful", Toast.LENGTH_LONG).show();
-            startActivity(new Intent(LoginActivity.this, MapActivity.class));
-        } else {
-            Toast.makeText(LoginActivity.this, "Connection Failed", Toast.LENGTH_LONG).show();
-            exception.printStackTrace();
-        }
+    public void onLoginSuccessfulEvent(LoginSuccessfulEvent event) {
+        Toast.makeText(LoginActivity.this, "Connection Successful", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(LoginActivity.this, MapActivity.class));
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLoginFailedEvent(LoginFailedEvent event) {
+        Toast.makeText(LoginActivity.this, "Connection Failed", Toast.LENGTH_LONG).show();
+        event.getException().printStackTrace();
+    }
+
 }

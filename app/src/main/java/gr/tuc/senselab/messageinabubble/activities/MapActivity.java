@@ -11,6 +11,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
@@ -20,7 +21,10 @@ import gr.tuc.senselab.messageinabubble.services.XmppConnectionService;
 import gr.tuc.senselab.messageinabubble.utils.Bubble;
 import gr.tuc.senselab.messageinabubble.utils.LocationListenerImpl;
 import gr.tuc.senselab.messageinabubble.utils.MapEventsReceiverImpl;
-import gr.tuc.senselab.messageinabubble.utils.events.NewMessageEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingSuccessfulEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageSendingFailedEvent;
+import gr.tuc.senselab.messageinabubble.utils.events.MessageSendingSuccessfulEvent;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
@@ -84,14 +88,17 @@ public class MapActivity extends AppCompatActivity {
         rotationOverlay.setEnabled(true);
         mapView.getOverlays().add(rotationOverlay);
 
-        locationOverlay = new MyLocationNewOverlay(new GpsMyLocationProvider(this), mapView);
+        GpsMyLocationProvider locationProvider = new GpsMyLocationProvider(this);
+        locationOverlay = new MyLocationNewOverlay(locationProvider, mapView);
         mapView.getOverlays().add(locationOverlay);
 
         IMapController mapController = mapView.getController();
         mapController.setZoom(ZOOM_LEVEL);
         mapController.setCenter(new GeoPoint(STARTING_LATITUDE, STARTING_LONGITUDE));
 
-        mapView.getOverlays().add(new MapEventsOverlay(new MapEventsReceiverImpl(this)));
+        MapEventsReceiverImpl mapEventsReceiver = new MapEventsReceiverImpl(this);
+        MapEventsOverlay mapEventsOverlay = new MapEventsOverlay(mapEventsReceiver);
+        mapView.getOverlays().add(mapEventsOverlay);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationListener = new LocationListenerImpl(locationOverlay);
@@ -167,16 +174,29 @@ public class MapActivity extends AppCompatActivity {
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void onNewMessageEvent(NewMessageEvent event) {
-        Exception exception = event.getException();
-        if (exception == null) {
-            createBubble(event.getBubble());
-        } else {
-            exception.printStackTrace();
-        }
+    public void onSendMessageSuccessfulEvent(MessageSendingSuccessfulEvent event) {
+        createBubble(event.getBubble(), event.getReceiver());
     }
 
-    private void createBubble(Bubble bubble) {
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onIncomingMessageSuccessfulEvent(MessageReceivingSuccessfulEvent event) {
+        createBubble(event.getBubble(), event.getSender());
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onSendMessageFailedEvent(MessageSendingFailedEvent event) {
+        Toast.makeText(MapActivity.this, "Message Sending Failed", Toast.LENGTH_LONG).show();
+        event.getException().printStackTrace();
+    }
+
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    public void onIncomingMessageFailedEvent(MessageReceivingFailedEvent event) {
+        Toast.makeText(MapActivity.this, "Message Receiving Failed", Toast.LENGTH_LONG).show();
+        event.getException().printStackTrace();
+    }
+
+    private void createBubble(Bubble bubble, String username) {
+        //TODO: find a way to distinguish incoming messages from sent ones.
         Marker marker = new Marker(mapView);
 
         Location location = new Location("");
@@ -186,13 +206,7 @@ public class MapActivity extends AppCompatActivity {
 
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        String bubbleBody = "";
-        if (bubble.getReceiver() == null) {
-            bubbleBody += "From " + bubble.getSender() + ": ";
-        } else if (bubble.getSender() == null) {
-            bubbleBody += "To " + bubble.getReceiver() + ": ";
-        }
-        bubbleBody += bubble.getBody();
+        String bubbleBody = username + ": " + bubble.getBody();
         marker.setTitle(bubbleBody);
 
         mapView.getOverlays().add(marker);
