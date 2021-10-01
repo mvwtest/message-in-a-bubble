@@ -69,6 +69,7 @@ public class MapActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         setContentView(R.layout.activity_map);
         initializeMapView();
         Intent intent = new Intent(this, XmppConnectionService.class);
@@ -76,9 +77,8 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void initializeMapView() {
-        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-
         mapView = findViewById(R.id.map_view);
+
         mapView.setTileSource(TileSourceFactory.MAPNIK);
         mapView.setMultiTouchControls(true);
         mapView.setClickable(true);
@@ -119,7 +119,6 @@ public class MapActivity extends AppCompatActivity {
             if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 buildAlertMessageNoGps();
             } else {
-                //FIXME: Location appears after we return to MapActivity
                 locationOverlay.enableMyLocation();
             }
         }
@@ -196,7 +195,6 @@ public class MapActivity extends AppCompatActivity {
     }
 
     private void createBubble(Bubble bubble, String username) {
-        //TODO: find a way to distinguish incoming messages from sent ones.
         Marker marker = new Marker(mapView);
 
         Location location = new Location("");
