@@ -10,8 +10,8 @@ public class MapEventsReceiverImpl implements MapEventsReceiver {
 
     private final Context context;
 
-    public MapEventsReceiverImpl(Context appContext) {
-        context = appContext;
+    public MapEventsReceiverImpl(Context context) {
+        this.context = context;
     }
 
     @Override

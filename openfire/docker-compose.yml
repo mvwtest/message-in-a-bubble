@@ -7,13 +7,15 @@ services:
       - "9090:9090"
       - "5222:5222"
   database:
-    container_name: mysql
+    container_name: mysql_openfire
     image: mysql:latest
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
-      MYSQL_DATABASE: openfiredb
+      MYSQL_DATABASE: openfire
+    ports:
+      - "3306:3306"
     volumes:
-      - "./openfire_mysql.sql:/docker-entrypoint-initdb.d/openfire_mysql.sql"
+      - "./schema.sql:/docker-entrypoint-initdb.d/schema.sql"

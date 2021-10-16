@@ -9,4 +9,3 @@ RUN apt-get update \
     && apt-get install -y /tmp/openfire_${OPENFIRE_VERSION}.deb
 
 CMD [ "/bin/systemctl", "start", "openfire" ]
-EXPOSE 5222/tcp 5223/tcp 7070/tcp 7443/tcp 5269/tcp 5270/tcp 5275/tcp 5276/tcp 5262/tcp 5263/tcp 9090/tcp 9091/tcp 7777/tcp 5229/tcp

@@ -16,7 +16,7 @@ public class LocationListenerImpl implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        // The method is an intentionally-blank override
+        // The method is an intentionally blank override
     }
 
     /**
@@ -25,7 +25,7 @@ public class LocationListenerImpl implements LocationListener {
     @Override
     @Deprecated
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        // The method is an intentionally-blank override
+        // The method is an intentionally blank override
     }
 
     @Override
