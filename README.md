@@ -65,7 +65,7 @@ respectively.
 
 `openfire`: This is the Openfire server that the android application will communicate with. Initial
 setup and administration can be done by navigating to the address `http://localhost:9090`. Make sure
-to connect the server to the external database by using `database` and `openfiredb` as HOSTNAME and
+to connect the server to the external database by using `database` and `openfire` as HOSTNAME and
 DATABASENAME respectively. For more information see the documentation on the official site
 of [Openfire](https://download.igniterealtime.org/openfire/docs/latest/documentation/).
 
