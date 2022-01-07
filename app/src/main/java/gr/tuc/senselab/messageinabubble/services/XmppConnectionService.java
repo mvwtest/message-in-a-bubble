@@ -8,7 +8,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import gr.tuc.senselab.messageinabubble.network.XmppConnection;
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
 import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationFailedEvent;
 import gr.tuc.senselab.messageinabubble.utils.events.AccountCreationSuccessfulEvent;
 import gr.tuc.senselab.messageinabubble.utils.events.LoginFailedEvent;
@@ -96,12 +96,12 @@ public class XmppConnectionService extends Service {
         });
     }
 
-    public void sendMessage(Bubble bubble, String receiver) {
+    public void sendMessage(BubbleDto bubbleDto, String receiver) {
         threadHandler.post(() -> {
             try {
-                xmppConnection.sendMessage(bubble, receiver);
+                xmppConnection.sendMessage(bubbleDto, receiver);
                 EventBus.getDefault()
-                        .postSticky(new MessageSendingSuccessfulEvent(bubble, receiver));
+                        .postSticky(new MessageSendingSuccessfulEvent(bubbleDto, receiver));
             } catch (Exception e) {
                 EventBus.getDefault().postSticky(new MessageSendingFailedEvent(e));
             }

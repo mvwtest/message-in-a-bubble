@@ -2,10 +2,7 @@ package gr.tuc.senselab.messageinabubble.network;
 
 
 import android.content.Context;
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ReconnectionManager;
 import org.jivesoftware.smack.SmackException;
@@ -25,29 +22,33 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Localpart;
 import org.jxmpp.stringprep.XmppStringprepException;
 
-public class XmppConnection {
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
-    // 127.0.0.1 for local openfire server, 10.0.2.2 for running in android vm
-    private static final String HOST = "10.0.2.2";
-    private static final String XMPP_DOMAIN_NAME = "dcfe20d51624";
-    private static final int PORT = 5222;
-    private static final String ADMIN_USERNAME = "admin";
-    private static final String ADMIN_PASSWORD = "admin";
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
+import gr.tuc.senselab.messageinabubble.utils.PropertiesUtil;
+
+public class XmppConnection {
 
     private final XMPPTCPConnection connection;
     private ChatManager chatManager;
+    private final Context context;
 
 
     public XmppConnection(Context context) throws UnknownHostException, XmppStringprepException {
+        this.context = context;
         AndroidSmackInitializer.initialize(context);
 
-        InetAddress address = InetAddress.getByName(HOST);
-        DomainBareJid domain = JidCreate.domainBareFrom(XMPP_DOMAIN_NAME);
+        InetAddress address = InetAddress.getByName(
+                PropertiesUtil.getProperty("host", context));
+        DomainBareJid domain = JidCreate.domainBareFrom(
+                PropertiesUtil.getProperty("xmppDomainName", context));
         XMPPTCPConnectionConfiguration configuration = XMPPTCPConnectionConfiguration.builder()
                 .setSecurityMode(ConnectionConfiguration.SecurityMode.disabled)
                 .setXmppDomain(domain)
                 .setHostAddress(address)
-                .setPort(PORT)
+                .setPort(Integer.parseInt(PropertiesUtil.getProperty("port", context)))
                 .enableDefaultDebugger()
                 .build();
 
@@ -59,7 +60,8 @@ public class XmppConnection {
     }
 
     public void login() throws InterruptedException, XMPPException, SmackException, IOException {
-        login(ADMIN_USERNAME, ADMIN_PASSWORD);
+        login(PropertiesUtil.getProperty("adminUsername", context),
+                PropertiesUtil.getProperty("adminPassword", context));
     }
 
     public void login(String username, String password)
@@ -72,15 +74,16 @@ public class XmppConnection {
         ReconnectionManager.getInstanceFor(connection).enableAutomaticReconnection();
     }
 
-    public void sendMessage(Bubble bubble, String receiver)
+    public void sendMessage(BubbleDto bubbleDto, String receiver)
             throws XmppStringprepException, SmackException.NotConnectedException,
             InterruptedException, JSONException {
-        EntityBareJid to = JidCreate.entityBareFrom(receiver + "@" + XMPP_DOMAIN_NAME);
+        EntityBareJid to = JidCreate.entityBareFrom(
+                receiver + "@" + PropertiesUtil.getProperty("xmppDomainName", context));
 
         JSONObject messageBody = new JSONObject();
-        messageBody.put("latitude", bubble.getLatitude());
-        messageBody.put("longitude", bubble.getLongitude());
-        messageBody.put("message", bubble.getBody());
+        messageBody.put("latitude", bubbleDto.getLatitude());
+        messageBody.put("longitude", bubbleDto.getLongitude());
+        messageBody.put("message", bubbleDto.getBody());
 
         Message message = connection.getStanzaFactory()
                 .buildMessageStanza()

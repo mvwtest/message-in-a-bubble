@@ -1,4 +1,4 @@
-package gr.tuc.senselab.messageinabubble;
+package gr.tuc.senselab.messageinabubble.it;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

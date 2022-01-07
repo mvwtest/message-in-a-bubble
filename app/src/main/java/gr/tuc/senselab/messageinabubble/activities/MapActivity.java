@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat;
 import androidx.preference.PreferenceManager;
 import gr.tuc.senselab.messageinabubble.R;
 import gr.tuc.senselab.messageinabubble.services.XmppConnectionService;
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
 import gr.tuc.senselab.messageinabubble.utils.LocationListenerImpl;
 import gr.tuc.senselab.messageinabubble.utils.MapEventsReceiverImpl;
 import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingFailedEvent;
@@ -174,12 +174,12 @@ public class MapActivity extends AppCompatActivity {
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onSendMessageSuccessfulEvent(MessageSendingSuccessfulEvent event) {
-        createBubble(event.getBubble(), event.getReceiver());
+        createBubble(event.getBubbleDto(), event.getReceiver());
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onIncomingMessageSuccessfulEvent(MessageReceivingSuccessfulEvent event) {
-        createBubble(event.getBubble(), event.getSender());
+        createBubble(event.getBubbleDto(), event.getSender());
     }
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
@@ -194,17 +194,17 @@ public class MapActivity extends AppCompatActivity {
         event.getException().printStackTrace();
     }
 
-    private void createBubble(Bubble bubble, String username) {
+    private void createBubble(BubbleDto bubbleDto, String username) {
         Marker marker = new Marker(mapView);
 
         Location location = new Location("");
-        location.setLatitude(bubble.getLatitude());
-        location.setLongitude(bubble.getLongitude());
+        location.setLatitude(bubbleDto.getLatitude());
+        location.setLongitude(bubbleDto.getLongitude());
         marker.setPosition(new GeoPoint(location));
 
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        String bubbleBody = username + ": " + bubble.getBody();
+        String bubbleBody = username + ": " + bubbleDto.getBody();
         marker.setTitle(bubbleBody);
 
         mapView.getOverlays().add(marker);

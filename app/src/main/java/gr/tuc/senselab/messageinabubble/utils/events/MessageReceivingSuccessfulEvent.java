@@ -1,6 +1,6 @@
 package gr.tuc.senselab.messageinabubble.utils.events;
 
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -8,7 +8,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class MessageReceivingSuccessfulEvent {
 
-    private final Bubble bubble;
+    private final BubbleDto bubbleDto;
     private final String sender;
 
 }

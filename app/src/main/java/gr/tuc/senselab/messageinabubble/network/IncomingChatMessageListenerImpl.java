@@ -1,6 +1,6 @@
 package gr.tuc.senselab.messageinabubble.network;
 
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
 import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingFailedEvent;
 import gr.tuc.senselab.messageinabubble.utils.events.MessageReceivingSuccessfulEvent;
 import org.greenrobot.eventbus.EventBus;
@@ -21,9 +21,9 @@ public class IncomingChatMessageListenerImpl implements IncomingChatMessageListe
             double longitude = json.getDouble("longitude");
             String bubbleBody = json.getString("message");
             String sender = from.asEntityBareJidString().split("@")[0];
-            Bubble bubble = new Bubble(latitude, longitude, bubbleBody);
+            BubbleDto bubbleDto = new BubbleDto(latitude, longitude, bubbleBody);
 
-            EventBus.getDefault().postSticky(new MessageReceivingSuccessfulEvent(bubble, sender));
+            EventBus.getDefault().postSticky(new MessageReceivingSuccessfulEvent(bubbleDto, sender));
         } catch (Exception e) {
             EventBus.getDefault().postSticky(new MessageReceivingFailedEvent(e));
         }

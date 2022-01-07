@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class Bubble {
+public class BubbleDto {
 
     private final double latitude;
     private final double longitude;

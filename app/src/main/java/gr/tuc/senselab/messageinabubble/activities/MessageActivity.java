@@ -13,7 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.textfield.TextInputLayout;
 import gr.tuc.senselab.messageinabubble.R;
 import gr.tuc.senselab.messageinabubble.services.XmppConnectionService;
-import gr.tuc.senselab.messageinabubble.utils.Bubble;
+import gr.tuc.senselab.messageinabubble.utils.BubbleDto;
+
 import java.util.Objects;
 
 public class MessageActivity extends AppCompatActivity {
@@ -92,8 +93,8 @@ public class MessageActivity extends AppCompatActivity {
             if (isServiceBound) {
                 double latitude = getIntent().getDoubleExtra("latitude", 0);
                 double longitude = getIntent().getDoubleExtra("longitude", 0);
-                Bubble bubble = new Bubble(latitude, longitude, bubbleBody);
-                xmppConnectionService.sendMessage(bubble, receiver);
+                BubbleDto bubbleDto = new BubbleDto(latitude, longitude, bubbleBody);
+                xmppConnectionService.sendMessage(bubbleDto, receiver);
             }
             finish();
         }
