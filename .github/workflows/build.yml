@@ -1,12 +1,8 @@
 name: Build
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  workflow_dispatch:
+  repository_dispatch:
 
 jobs:
   build:
@@ -23,3 +19,8 @@ jobs:
           cache: 'gradle'
       - name: Build with Grandle
         run: ./gradlew build --info
+      - name : Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+         name: hello_world
+         path: message-in-a-bubble/app/build/outputs/apk
