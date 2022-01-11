@@ -18,10 +18,10 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
       - name: Build with Grandle
-        run: ./gradlew build --info --debug --stacktrace
+        run: ./gradlew build --debug
         #run: ./gradlew assembleDebug
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
          name: hello_world
-         path: /home/runner/message-in-a-bubble/app/build/outputs/apk
+         path: /home/runner/message-in-a-bubble/app/build/outputs
