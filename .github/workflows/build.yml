@@ -18,8 +18,8 @@ jobs:
           distribution: 'adopt'
           cache: 'gradle'
       - name: Build with Grandle
-        run: ./gradlew build --debug
-        #run: ./gradlew assembleDebug
+        #run: ./gradlew build --debug
+        run: ./assembleConversationsFreeSystemDebug
       - name : Upload artifact
         uses: actions/upload-artifact@master
         with:
