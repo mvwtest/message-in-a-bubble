@@ -24,4 +24,4 @@ jobs:
         uses: actions/upload-artifact@master
         with:
          name: hello_world
-         path: /home/runner/message-in-a-bubble/app/build/outputs
+         path: /home/runner/work/message-in-a-bubble/message-in-a-bubble/app/build/outputs
